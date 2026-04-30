@@ -13,19 +13,25 @@ body{
 .topbar{
   display:flex;
   justify-content:space-between;
+  align-items:center;
   padding:10px;
 }
 
-/* SMALL BUTTONS */
+/* LEFT TABS */
+.tabs{
+  display:flex;
+  gap:8px;
+}
+
 .tab{
-  padding:6px 10px;
+  padding:5px 10px;
   font-size:12px;
   background:#111;
   border-radius:6px;
   cursor:pointer;
 }
 
-/* PROFILE ICON */
+/* PROFILE */
 .profile{
   width:40px;
   height:40px;
@@ -34,14 +40,14 @@ body{
   cursor:pointer;
 }
 
-/* POPUP FORM */
+/* MODAL */
 .modal{
   position:fixed;
   top:50%;
   left:50%;
   transform:translate(-50%,-50%);
-  width:80%;
-  max-width:300px;
+  width:85%;
+  max-width:320px;
   background:#111;
   padding:15px;
   border-radius:10px;
@@ -49,52 +55,74 @@ body{
   z-index:10;
 }
 
+.close{
+  text-align:left;
+  cursor:pointer;
+  font-size:18px;
+}
+
 /* DASHBOARD */
 .dashboard{
   position:fixed;
   top:0;
   left:0;
-  width:80%;
+  width:75%;
   height:100%;
   background:#111;
   padding:15px;
   display:none;
 }
 
+/* HEADER TEXT */
+.hero{
+  padding:15px;
+  text-align:center;
+  color:#00ffc3;
+  font-size:14px;
+}
+
 /* BOT GRID */
-.bot{
-  margin:10px;
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
   padding:10px;
+}
+
+.bot{
   background:#111;
   border-radius:10px;
+  padding:10px;
   text-align:center;
 }
 
 .bot img{
   width:100%;
-  border-radius:10px;
+  height:120px;
+  object-fit:cover;
+  border-radius:8px;
 }
 
 button{
   width:100%;
-  padding:10px;
+  padding:8px;
+  margin-top:5px;
   background:#00ffc3;
   border:none;
-  margin-top:5px;
 }
 
-/* ANIMATION */
 .bot:hover{
   transform:scale(1.03);
   transition:0.3s;
 }
 </style></head><body><div class="topbar">
-  <div>
-    <span class="tab" onclick="openModal()">Login</span>
-    <span class="tab" onclick="openModal()">Register</span>
+  <div class="tabs">
+    <div class="tab" onclick="openModal()">Login</div>
+    <div class="tab" onclick="openModal()">Register</div>
   </div>
   <div class="profile" onclick="toggleDashboard()"></div>
 </div><!-- MODAL --><div class="modal" id="modal">
+  <div class="close" onclick="closeModal()">✖</div>
   <input id="email" placeholder="Email"><br><br>
   <input id="password" type="password" placeholder="Password"><br>
   <button onclick="register()">Register</button>
@@ -106,30 +134,39 @@ button{
   <p>Days Left: <span id="days"></span></p>
   <button onclick="withdraw()">Request Withdrawal</button>
   <button onclick="logout()">Logout</button>
-</div><!-- BOTS --><div id="bots"><div class="bot">
+</div><!-- HERO TEXT --><div class="hero">
+  Welcome to NeuralMine 🚀<br>
+  Mine XP daily with powerful AI bots and unlock withdrawals after 30 days of consistent mining.
+</div><!-- BOT GRID --><div class="grid"><div class="bot">
 <img src="https://cdn.pixabay.com/photo/2023/03/02/20/31/ai-7829021_1280.jpg">
-<p>Standard Bot - $5</p>
-<button onclick="buy(5,'Standard')">Buy</button>
+<p><b>Standard Bot</b></p>
+<p>$5 | 50 XP/day</p>
+<button onclick="buy(5,'Standard',50)">Buy</button>
 </div><div class="bot">
 <img src="https://cdn.pixabay.com/photo/2023/02/21/13/38/ai-7803074_1280.jpg">
-<p>Bronze Bot - $15</p>
-<button onclick="buy(15,'Bronze')">Buy</button>
+<p><b>Bronze Bot</b></p>
+<p>$15 | 120 XP/day</p>
+<button onclick="buy(15,'Bronze',120)">Buy</button>
 </div><div class="bot">
 <img src="https://cdn.pixabay.com/photo/2023/03/06/18/51/ai-7834081_1280.jpg">
-<p>Silver Bot - $50</p>
-<button onclick="buy(50,'Silver')">Buy</button>
+<p><b>Silver Bot</b></p>
+<p>$50 | 300 XP/day</p>
+<button onclick="buy(50,'Silver',300)">Buy</button>
 </div><div class="bot">
 <img src="https://cdn.pixabay.com/photo/2023/04/17/10/33/ai-generated-7930006_1280.jpg">
-<p>Gold Bot - $100</p>
-<button onclick="buy(100,'Gold')">Buy</button>
+<p><b>Gold Bot</b></p>
+<p>$100 | 600 XP/day</p>
+<button onclick="buy(100,'Gold',600)">Buy</button>
 </div><div class="bot">
 <img src="https://cdn.pixabay.com/photo/2023/05/22/17/14/ai-8010023_1280.jpg">
-<p>Community I - $300</p>
-<button onclick="buy(300,'Community I')">Buy</button>
+<p><b>Community I</b></p>
+<p>$300 | 1200 XP/day</p>
+<button onclick="buy(300,'Community I',1200)">Buy</button>
 </div><div class="bot">
 <img src="https://cdn.pixabay.com/photo/2023/06/01/08/45/ai-8032663_1280.jpg">
-<p>Community II - $500</p>
-<button onclick="buy(500,'Community II')">Buy</button>
+<p><b>Community II</b></p>
+<p>$500 | 2000 XP/day</p>
+<button onclick="buy(500,'Community II',2000)">Buy</button>
 </div></div><script>
 let user=null;
 let xp=0;
@@ -139,7 +176,6 @@ let startDate=null;
 function openModal(){
   document.getElementById("modal").style.display="block";
 }
-
 function closeModal(){
   document.getElementById("modal").style.display="none";
 }
@@ -167,9 +203,9 @@ function toggleDashboard(){
   d.style.display = d.style.display==="block"?"none":"block";
 }
 
-function buy(amount,name){
+function buy(price,name,xpRate){
   bots.push(name);
-  xp+=amount*10;
+  xp+=xpRate;
   startDate=Date.now();
   updateUI();
 }
@@ -179,7 +215,7 @@ function updateUI(){
   if(user){
     document.getElementById("username").innerText=user;
     document.getElementById("xp").innerText=xp;
-    document.getElementById("botsOwned").innerText=bots.join(",");
+    document.getElementById("botsOwned").innerText=bots.join(", ");
     if(startDate){
       let days=Math.floor((Date.now()-startDate)/(1000*60*60*24));
       document.getElementById("days").innerText=30-days;
@@ -188,11 +224,12 @@ function updateUI(){
 }
 
 function withdraw(){
+  if(!startDate) return alert("No bot active");
   let daysPassed=Math.floor((Date.now()-startDate)/(1000*60*60*24));
   if(daysPassed<30){
-    alert("Not yet eligible");
+    alert("Wait until 30 days complete");
   }else{
-    alert("Withdrawal requested");
+    alert("Withdrawal request submitted");
   }
 }
 
