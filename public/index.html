@@ -5,180 +5,197 @@
 body{
   margin:0;
   font-family:Arial;
-  background:url('https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg') no-repeat center center/cover;
+  background:linear-gradient(#0a0a0a,#000);
   color:white;
 }
 
-/* Overlay glow */
-body::before{
-  content:"";
-  position:fixed;
-  width:100%;
-  height:100%;
-  background:radial-gradient(circle at 30% 30%, rgba(0,255,195,0.2), transparent);
-  z-index:-1;
+/* TOP BAR */
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  padding:10px;
 }
 
-/* Header */
-.header{
-  text-align:center;
-  padding:15px;
-  font-size:20px;
-  font-weight:bold;
-  color:#00ffc3;
-}
-
-/* Cards */
-.card{
-  margin:10px;
-  padding:15px;
-  background:rgba(0,0,0,0.6);
-  backdrop-filter:blur(10px);
-  border-radius:12px;
-  border:1px solid rgba(0,255,195,0.2);
-}
-
-/* Inputs */
-input{
-  width:100%;
-  padding:12px;
-  margin:5px 0;
-  border-radius:8px;
-  border:none;
-}
-
-/* Buttons */
-button{
-  width:100%;
-  padding:12px;
-  margin-top:8px;
-  background:#00ffc3;
-  border:none;
-  border-radius:8px;
-  font-weight:bold;
+/* SMALL BUTTONS */
+.tab{
+  padding:6px 10px;
+  font-size:12px;
+  background:#111;
+  border-radius:6px;
   cursor:pointer;
 }
 
-/* Balance */
-.balance{
-  font-size:28px;
-  color:#00ffc3;
-  text-shadow:0 0 10px #00ffc3;
+/* PROFILE ICON */
+.profile{
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  background:url('https://cdn.pixabay.com/photo/2023/05/29/09/59/ai-generated-8025127_1280.jpg') center/cover;
+  cursor:pointer;
 }
 
-/* Bot buttons */
+/* POPUP FORM */
+.modal{
+  position:fixed;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  width:80%;
+  max-width:300px;
+  background:#111;
+  padding:15px;
+  border-radius:10px;
+  display:none;
+  z-index:10;
+}
+
+/* DASHBOARD */
+.dashboard{
+  position:fixed;
+  top:0;
+  left:0;
+  width:80%;
+  height:100%;
+  background:#111;
+  padding:15px;
+  display:none;
+}
+
+/* BOT GRID */
 .bot{
-  margin-top:10px;
-}
-
-/* Footer */
-.footer{
+  margin:10px;
+  padding:10px;
+  background:#111;
+  border-radius:10px;
   text-align:center;
-  font-size:12px;
-  color:#aaa;
-  margin-top:20px;
 }
-</style></head><body><div class="header">NeuralMine</div><!-- AUTH --><div class="card">
-  <input id="email" placeholder="Email">
-  <input id="password" type="password" placeholder="Password"><button onclick="register()">Register</button>
-<button onclick="login()">Login</button>
 
-</div><!-- BALANCE --><div class="card">
-  <div>Balance</div>
-  <div class="balance" id="bal">$0.00</div>
-  <button onclick="loadBalance()">Refresh Balance</button>
-</div><!-- BOTS --><div class="card">
-  <div class="bot">
-    <b>Standard Bot</b> - $5
-    <button onclick="buy(5)">Buy</button>
-  </div>  <div class="bot">
-    <b>Bronze Bot</b> - $15
-    <button onclick="buy(15)">Buy</button>
-  </div>  <div class="bot">
-    <b>Community Bot I</b> - $300
-    <button onclick="buy(300)">Buy</button>
-  </div>  <div class="bot">
-    <b>Community Bot II</b> - $500
-    <button onclick="buy(500)">Buy</button>
+.bot img{
+  width:100%;
+  border-radius:10px;
+}
+
+button{
+  width:100%;
+  padding:10px;
+  background:#00ffc3;
+  border:none;
+  margin-top:5px;
+}
+
+/* ANIMATION */
+.bot:hover{
+  transform:scale(1.03);
+  transition:0.3s;
+}
+</style></head><body><div class="topbar">
+  <div>
+    <span class="tab" onclick="openModal()">Login</span>
+    <span class="tab" onclick="openModal()">Register</span>
   </div>
-</div><!-- WITHDRAW --><div class="card">
-  <input id="amount" placeholder="Withdraw amount">
+  <div class="profile" onclick="toggleDashboard()"></div>
+</div><!-- MODAL --><div class="modal" id="modal">
+  <input id="email" placeholder="Email"><br><br>
+  <input id="password" type="password" placeholder="Password"><br>
+  <button onclick="register()">Register</button>
+  <button onclick="login()">Login</button>
+</div><!-- DASHBOARD --><div class="dashboard" id="dashboard">
+  <h3 id="username"></h3>
+  <p>XP: <span id="xp">0</span></p>
+  <p>Bots: <span id="botsOwned"></span></p>
+  <p>Days Left: <span id="days"></span></p>
   <button onclick="withdraw()">Request Withdrawal</button>
-</div><div class="footer">
-  NeuralMine © AI Mining System
-</div><script>
-const API = "/api";
-let token = "";
+  <button onclick="logout()">Logout</button>
+</div><!-- BOTS --><div id="bots"><div class="bot">
+<img src="https://cdn.pixabay.com/photo/2023/03/02/20/31/ai-7829021_1280.jpg">
+<p>Standard Bot - $5</p>
+<button onclick="buy(5,'Standard')">Buy</button>
+</div><div class="bot">
+<img src="https://cdn.pixabay.com/photo/2023/02/21/13/38/ai-7803074_1280.jpg">
+<p>Bronze Bot - $15</p>
+<button onclick="buy(15,'Bronze')">Buy</button>
+</div><div class="bot">
+<img src="https://cdn.pixabay.com/photo/2023/03/06/18/51/ai-7834081_1280.jpg">
+<p>Silver Bot - $50</p>
+<button onclick="buy(50,'Silver')">Buy</button>
+</div><div class="bot">
+<img src="https://cdn.pixabay.com/photo/2023/04/17/10/33/ai-generated-7930006_1280.jpg">
+<p>Gold Bot - $100</p>
+<button onclick="buy(100,'Gold')">Buy</button>
+</div><div class="bot">
+<img src="https://cdn.pixabay.com/photo/2023/05/22/17/14/ai-8010023_1280.jpg">
+<p>Community I - $300</p>
+<button onclick="buy(300,'Community I')">Buy</button>
+</div><div class="bot">
+<img src="https://cdn.pixabay.com/photo/2023/06/01/08/45/ai-8032663_1280.jpg">
+<p>Community II - $500</p>
+<button onclick="buy(500,'Community II')">Buy</button>
+</div></div><script>
+let user=null;
+let xp=0;
+let bots=[];
+let startDate=null;
 
-// REGISTER
-async function register(){
-  await fetch(API+"/register",{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({
-      email:email.value,
-      password:password.value
-    })
-  });
-  alert("Registered successfully");
+function openModal(){
+  document.getElementById("modal").style.display="block";
 }
 
-// LOGIN
-async function login(){
-  const res = await fetch(API+"/login",{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({
-      email:email.value,
-      password:password.value
-    })
-  });
-
-  const data = await res.json();
-  token = data.token;
-
-  alert("Logged in");
+function closeModal(){
+  document.getElementById("modal").style.display="none";
 }
 
-// LOAD BALANCE
-async function loadBalance(){
-  const res = await fetch(API+"/balance",{
-    headers:{Authorization:token}
-  });
-
-  const data = await res.json();
-  document.getElementById("bal").innerText = "$"+Number(data.balance).toFixed(2);
+function register(){
+  user=email.value;
+  localStorage.setItem("user",user);
+  login();
 }
 
-// BUY BOT
-async function buy(amount){
-  const res = await fetch(API+"/pay",{
-    method:"POST",
-    headers:{
-      "Content-Type":"application/json",
-      Authorization:token
-    },
-    body:JSON.stringify({amount})
-  });
-
-  const data = await res.json();
-  window.location.href = data.link;
+function login(){
+  user=email.value;
+  localStorage.setItem("user",user);
+  closeModal();
+  updateUI();
 }
 
-// WITHDRAW
-async function withdraw(){
-  await fetch(API+"/withdraw",{
-    method:"POST",
-    headers:{
-      "Content-Type":"application/json",
-      Authorization:token
-    },
-    body:JSON.stringify({
-      amount:Number(document.getElementById("amount").value)
-    })
-  });
-
-  alert("Withdrawal request sent");
+function logout(){
+  localStorage.clear();
+  location.reload();
 }
+
+function toggleDashboard(){
+  let d=document.getElementById("dashboard");
+  d.style.display = d.style.display==="block"?"none":"block";
+}
+
+function buy(amount,name){
+  bots.push(name);
+  xp+=amount*10;
+  startDate=Date.now();
+  updateUI();
+}
+
+function updateUI(){
+  user=localStorage.getItem("user");
+  if(user){
+    document.getElementById("username").innerText=user;
+    document.getElementById("xp").innerText=xp;
+    document.getElementById("botsOwned").innerText=bots.join(",");
+    if(startDate){
+      let days=Math.floor((Date.now()-startDate)/(1000*60*60*24));
+      document.getElementById("days").innerText=30-days;
+    }
+  }
+}
+
+function withdraw(){
+  let daysPassed=Math.floor((Date.now()-startDate)/(1000*60*60*24));
+  if(daysPassed<30){
+    alert("Not yet eligible");
+  }else{
+    alert("Withdrawal requested");
+  }
+}
+
+updateUI();
 </script></body>
 </html>
